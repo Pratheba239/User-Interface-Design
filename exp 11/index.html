@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inventory Management Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    canvas {
+      max-width: 500px;
+      margin: 20px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center;">Inventory Bar Chart (Item Quantities)</h2>
+  <canvas id="barChart"></canvas>
+
+  <h2 style="text-align:center;">Inventory Pie Chart (Category Distribution)</h2>
+  <canvas id="pieChart"></canvas>
+
+  <script>
+   
+    const inventoryData = [
+      { item: 'Laptops', quantity: 40, category: 'Electronics' },
+      { item: 'Monitors', quantity: 30, category: 'Electronics' },
+      { item: 'Chairs', quantity: 50, category: 'Furniture' },
+      { item: 'Desks', quantity: 20, category: 'Furniture' },
+      { item: 'Stationery', quantity: 60, category: 'Supplies' }
+    ];
+
+    //bar chart
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: inventoryData.map(item => item.item),
+        datasets: [{
+          label: 'Quantity in Stock',
+          data: inventoryData.map(item => item.quantity),
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // ------------------- Pie Chart -------------------
+    const categoryCounts = {};
+    inventoryData.forEach(item => {
+      categoryCounts[item.category] = (categoryCounts[item.category] || 0) + item.quantity;
+    });
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(categoryCounts),
+        datasets: [{
+          data: Object.values(categoryCounts),
+          backgroundColor: ['#4BC0C0', '#FF6384', '#FFCE56']
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  </script>
+</body>
+</html>
